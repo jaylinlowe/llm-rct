@@ -30,9 +30,9 @@ Includes preprocessing, basic summary statistics, and all analysis for the Sente
     * `twitter_raw_data.xlsx` - Raw data file downloaded directly from the paper ["To tweet or not to tweet, that is the question: a randomized trial of twitter effects in medical education](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0223992)
     * `twitter_raw_data_with_abstracts.xlsx` - Data file with unprocessed data plus abstracts. Abstracts were obtained manually. 
     * `twitter_raw_data_with_extra_info.xlsx` - Data file with unprocessed original data, abstract, and additional information like author affiliation. This file can be generated from `tweets_pipeline.py` with `get_data = "True"`
-* `tweet_results` 
-    * `tweets_pairs_with_response.csv` - results file for paired papers where the LLM was asked to predict the outcome.
-    * `tweets_pairs_multiple_covariates.csv` - results file for paired papers where the LLM was asked to extract multiple covariates. 
+* `tweet_results` - This folder is necessary to run `tweets_pipeline.py` and the results files will be stored here. These files are too large to push to github, but they are:
+    * `tweets_pairs_with_response.csv` - results file for paired papers where the LLM was asked to predict the outcome. For this, explanations == False, question_type = 'basic', use_pairs == True, and info_type = "abstract"
+    * `tweets_pairs_multiple_covariates.csv` - results file for paired papers where the LLM was asked to extract multiple covariates. For this, explanations == False, question_type = basic, use_pairs == True, and info_type = "all"
 * `tweets_analysis.ipynb` - Analysis file 
 
 
