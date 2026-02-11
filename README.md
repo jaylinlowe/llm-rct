@@ -33,8 +33,11 @@ Includes preprocessing, basic summary statistics, and all analysis for the Sente
 * `tweet_results` - This folder is necessary to run `tweets_pipeline.py` and the results files will be stored here. These files are too large to push to github, but they are:
     * `tweets_pairs_with_response.csv` - results file for paired papers where the LLM was asked to predict the outcome. For this, explanations == False, question_type = 'basic', use_pairs == True, and info_type = "abstract"
     * `tweets_pairs_multiple_covariates.csv` - results file for paired papers where the LLM was asked to extract multiple covariates. For this, explanations == False, question_type = basic, use_pairs == True, and info_type = "all"
+    * `tweets_basic_allinfo.csv` - rerun of paired papers where we specifically ask for predictions of views within 30 days and use affiliations and authors as well. 
 * `tweets_analysis.ipynb` - Analysis file 
 
 
 
 ### Open Access Papers
+Note that science initial2 became science basic 
+
