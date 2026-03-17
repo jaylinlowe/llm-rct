@@ -1,15 +1,7 @@
 # llm-rct: Leveraging Large Language Models to Improve Precision in Randomized Controlled Trials
-This repository includes supplemental code for "Leveraging Large Language Models to Improve Precision in Randomized Controlled Trials" by Jaylin Lowe, Adam Sales, and Johann Gagnon-Bartsch. There are four datasets, each with its own folder. The code is organized as follows:
+This repository includes supplemental code for "Leveraging Large Language Models to Improve Precision in Randomized Controlled Trials" by Jaylin Lowe, Adam Sales, and Johann Gagnon-Bartsch. There are three datasets, each with its own folder. The code is organized as follows:
 
-
-### CTA
-Includes processing data for the Cognitive Tutor Algebra (CTA) example. Data is private and cannot be included. Files are:
-
-* `cta_basic.ipynb` - File obtaining basic summary statistics given in the paper. Requires "cta_student_level_final.csv", which is student level and cannot be shared. 
-* `cta_pipeline.py` - Main file for obtaining LLM predictions. Requires "cta_student_level_final.csv". Outputs "cta_results/pair_results.csv". 
-* `cta_analysis.ipynb` - Analysis file of CTA results, based on output files generated in cta_pipeline.py. Requires "cta_results/pair_results.csv". 
-
-### Recidivism
+### Case Study 1: Recidivism
 Includes preprocessing, basic summary statistics, and all analysis for the Sentencing of Defendants and Recidivism example. Data is public and can be obtained from the `cpt.paper` R package and is also included here. 
 
 * `judges.csv` - Unprocessed data file downloaded directly from the `cpt.paper` package. 
@@ -23,21 +15,21 @@ Includes preprocessing, basic summary statistics, and all analysis for the Sente
     * `pair_results_size100.csv` - results file used in paper, when dataset is paired into stratum with approximately 100 observations per stratum 
 
 
-### Tweeted Papers
 
-* `tweets_pipeline.py` - Main file for obtaining LLM predictions. 
-* `data`
-    * `twitter_raw_data.xlsx` - Raw data file downloaded directly from the paper ["To tweet or not to tweet, that is the question: a randomized trial of twitter effects in medical education](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0223992)
-    * `twitter_raw_data_with_abstracts.xlsx` - Data file with unprocessed data plus abstracts. Abstracts were obtained manually. 
-    * `twitter_raw_data_with_extra_info.xlsx` - Data file with unprocessed original data, abstract, and additional information like author affiliation. This file can be generated from `tweets_pipeline.py` with `get_data = "True"`
-* `tweet_results` - This folder is necessary to run `tweets_pipeline.py` and the results files will be stored here. These files are too large to push to github, but they are:
-    * `tweets_pairs_with_response.csv` - results file for paired papers where the LLM was asked to predict the outcome. For this, explanations == False, question_type = 'basic', use_pairs == True, and info_type = "abstract"
-    * `tweets_pairs_multiple_covariates.csv` - results file for paired papers where the LLM was asked to extract multiple covariates. For this, explanations == False, question_type = basic, use_pairs == True, and info_type = "all"
-    * `tweets_basic_allinfo.csv` - rerun of paired papers where we specifically ask for predictions of views within 30 days and use affiliations and authors as well. 
-* `tweets_analysis.ipynb` - Analysis file 
+### Case Study 2: CTA
+Includes processing data for the Cognitive Tutor Algebra (CTA) example. Data is private and cannot be included. Files are:
+
+* `cta_basic.ipynb` - File obtaining basic summary statistics given in the paper. Requires "cta_student_level_final.csv", which is student level and cannot be shared. 
+* `cta_pipeline.py` - Main file for obtaining LLM predictions. Requires "cta_student_level_final.csv". Outputs "cta_results/pair_results.csv". 
+* `cta_analysis.ipynb` - Analysis file of CTA results, based on output files generated in cta_pipeline.py. Requires "cta_results/pair_results.csv". 
 
 
+### Case Study 3: Open Access Papers
+Includes processing data for the third case study. Data is private and cannot be included. 
 
-### Open Access Papers
-Note that science initial2 became science basic 
+* `open_access_preprocess.py` - Pulls abstracts and preprocesses raw data. Creates journal-specific CSV files with RCT covariates, outcome, and abstract. 
+* `open_access_pipeline.py` - Main file for obtaining LLM predictions. Requires corresponding journal data file. 
+* `science_posttreat.py` - Additional file for small experiment checking for post-treatment likelihood on Science papers only. 
+* `open_access_analysis.ipynb` - Analysis file of results, based on output files generated in open_access_pipeline.py
+
 
