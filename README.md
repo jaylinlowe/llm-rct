@@ -27,7 +27,7 @@ Includes processing data for the Cognitive Tutor Algebra (CTA) example. Data is 
 ### Case Study 3: Open Access Papers
 Includes processing data for the third case study. Data is private and cannot be included. 
 
-* `open_access_preprocess.py` - Pulls abstracts and preprocesses raw data. Creates journal-specific CSV files with RCT covariates, outcome, and abstract. 
+* `open_access_preprocess.ipynb` - Pulls abstracts and preprocesses raw data. Creates journal-specific CSV files with RCT covariates, outcome, and abstract. 
 * `open_access_pipeline.py` - Main file for obtaining LLM predictions. Requires corresponding journal data file. 
 * `science_posttreat.py` - Additional file for small experiment checking for post-treatment likelihood on Science papers only. 
 * `open_access_analysis.ipynb` - Analysis file of results, based on output files generated in open_access_pipeline.py
