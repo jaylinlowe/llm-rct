@@ -1,5 +1,5 @@
 # llm-rct: Leveraging Large Language Models to Improve Precision in Randomized Controlled Trials
-This repository includes supplemental code for "Leveraging Large Language Models to Improve Precision in Randomized Controlled Trials" by Jaylin Lowe, Adam Sales, and Johann Gagnon-Bartsch. There are three datasets, each with its own folder. The code is organized as follows:
+This repository includes supplemental code for "Leveraging Large Language Models to Improve Precision in Randomized Controlled Trials". There are three datasets, each with its own folder. The code is organized as follows:
 
 ### Case Study 1: Recidivism
 Includes preprocessing, basic summary statistics, and all analysis for the Sentencing of Defendants and Recidivism example. Data is public and can be obtained from the `cpt.paper` R package and is also included here. 
