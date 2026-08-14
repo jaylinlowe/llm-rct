@@ -17,15 +17,15 @@ Includes preprocessing, basic summary statistics, and all analysis for the Sente
 
 * `judges.csv` - Unprocessed data file downloaded directly from the `cpt.paper` package. 
 * `recividism_basic.ipynb` - File for basic summary statistics given in the paper. 
-* `recidivism_pipeline.py` - Main file for obtaining LLM predictions. Outputs "recividism_results/pair_results_sizeN_allpairs.csv" where N is a parameter determining how large the stratum are. 
-* `recidivism_analysis.ipynb` - Analysis file of recividism results, based on "recividism_results/pair_results_sizeN_allpairs.csv" file. 
+* `recidivism_pipeline.py` - Main file for obtaining LLM predictions. Outputs `recividism_results/pair_results_sizeN_allpairs.csv` where N is a parameter determining how large the stratum are. 
+* `recidivism_analysis.ipynb` - Analysis file of recividism results, based on `recividism_results/pair_results_sizeN_allpairs.csv` file. 
 
 
 ### Case Study 3: CTA
 Includes processing data for the Cognitive Tutor Algebra (CTA) example. Data is private and cannot be included. Files are:
 
-* `cta_basic.ipynb` - File obtaining basic summary statistics given in the paper. Requires "cta_student_level_final.csv", which is student level and cannot be shared. 
-* `cta_pipeline.py` - Main file for obtaining LLM predictions. Requires "cta_student_level_final.csv". Outputs "cta_results/pair_results_allpairs.csv". 
-* `cta_analysis.ipynb` - Analysis file of CTA results, based on output files generated in cta_pipeline.py. Requires "cta_results/pair_results_allpairs.csv". 
-* `cta_paper_results.Rmd`- R file of CTA results, based on output files generated in cta_analysis.ipynb. 
+* `cta_basic.ipynb` - File obtaining basic summary statistics given in the paper. Requires `cta_student_level_final.csv`, which is student level and cannot be shared. 
+* `cta_pipeline.py` - Main file for obtaining LLM predictions. Requires `cta_student_level_final.csv`. Outputs "cta_results/pair_results_allpairs.csv". 
+* `cta_analysis.ipynb` - Analysis file of CTA results, based on output files generated in cta_pipeline.py. Requires `cta_results/pair_results_allpairs.csv`. 
+* `cta_paper_results.Rmd`- R file of CTA results, based on output files generated in `cta_analysis.ipynb`. 
 
