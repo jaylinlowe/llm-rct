@@ -23,7 +23,7 @@ def get_oob_preds(df):
     X = df.drop(columns = ['laterarr'])
 
     rf = RandomForestClassifier(
-    n_estimators=200,
+    n_estimators=100,
     oob_score=True,       
     bootstrap=True,        
     random_state=8471,
@@ -159,7 +159,7 @@ def preprocess(args):
         judges['pair_group'] = np.where(judges['pair_group'] == 10, 9, judges['pair_group']) #collapse group 10 into 9 since its so small
     judges["pair_group_size"] = judges.groupby("pair_group")["pair_group"].transform("size")
     
-    judges.to_csv(f"preprocessed_data/judges_pairs_preprocessed_unpaired_size{args.group_size}.csv")
+    judges.to_csv(f"preprocessed_data/judges_pairs_preprocessed_unpaired_size{args.group_size}_allpairs.csv")
 
     # randomly reorder, and then merge only on group 
     df1 = judges.copy().sample(frac = 1, random_state = 48741).reset_index(drop = True)
@@ -167,13 +167,9 @@ def preprocess(args):
     df1 = df1.reset_index(drop=True)
     df2 = df2.reset_index(drop=True)
 
-    df1['idx'] = df1.index
-    df2['idx'] = df2.index
-    pairs = pd.merge(df1, df2, on='pair_group', suffixes=('.x', '.y'))
 
-    
-    pairs = pairs[pairs['idx.x'] < pairs['idx.y']]
-    pairs = pairs.drop(columns=['idx.x', 'idx.y']).reset_index(drop = True)
+    pairs = pd.merge(df1, df2, on='pair_group', suffixes=('.x', '.y'))
+    pairs = pairs[pairs['id.x'] != pairs['id.y']]
     print("Done with pairing")
 
 
@@ -194,7 +190,7 @@ def preprocess(args):
 
         pairs.at[i, 'question'] =  question 
 
-    pairs.to_csv(f"preprocessed_data/judges_pairs_preprocessed_size{args.group_size}.csv", index = False)
+    pairs.to_csv(f"preprocessed_data/judges_pairs_preprocessed_size{args.group_size}_allpairs.csv", index = False)
 
 
 def run_pipeline(args):
@@ -209,7 +205,7 @@ def run_pipeline(args):
     if args.run_preprocess == "True":
         preprocess(args)
    
-    pairs = pd.read_csv(f"preprocessed_data/judges_pairs_preprocessed_size{args.group_size}.csv")
+    pairs = pd.read_csv(f"preprocessed_data/judges_pairs_preprocessed_size{args.group_size}_allpairs.csv")
         
     for i in range(0, len(pairs)):
     #for i in range(0, 5): 
@@ -233,7 +229,7 @@ def run_pipeline(args):
 
         if i % 200 == 0:
             print(f"Done with index {i}")
-            filename = f"recidivism_results/pair_results_size{args.group_size}.csv"
+            filename = f"recidivism_results/pair_results_size{args.group_size}_allpairs.csv"
     
     pairs.to_csv(filename, index = False)
 
@@ -245,7 +241,6 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=93482)
     #parser.add_argument("--results_file", type = str, required = True)
     parser.add_argument("--run_preprocess", type = str, default = "False")
-    parser.add_argument("--all_pairs", default = "True")
     parser.add_argument("--group_size", default = 100)
     args = parser.parse_args()
 
