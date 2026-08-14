@@ -1,0 +1,105 @@
+---
+title: "CTA Final Paper Results"
+output: html_document
+date: "2026-08-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lmerTest)
+```
+
+```{r}
+cta <- read.csv("cta_with_schoolid2.csv")
+
+cta_model1 <- lmerTest::lmer(y_yirt ~ oob_preds + risk_score_adj + + grdlvl + race + sex + spec_speced + spec_gifted + spec_esl + frl + treatment + xirt + xirt_mis + (1|state/schoolidn), data = cta, REML = FALSE)
+
+cta_model2 <- lmerTest::lmer(y_yirt ~  oob_preds + + grdlvl + race + sex + spec_speced + spec_gifted + spec_esl + frl + treatment + xirt + xirt_mis + (1|state/schoolidn), data = cta, REML = FALSE)
+
+print(summary(cta_model1))
+
+print(summary(cta_model2))
+
+coef_matrix1 <- coef(summary(cta_model1))
+coef_matrix1[, c("Estimate", "Std. Error", "Pr(>|t|)") ]
+round(coef_matrix1[, c("Estimate", "Std. Error", "Pr(>|t|)") ], 3)
+
+coef_matrix2 <- coef(summary(cta_model2))
+round(coef_matrix2[, c("Estimate", "Std. Error", "Pr(>|t|)") ], 3)
+```
+
+```{r}
+# create school level version 
+
+# race, sex, all spec, frl columns need to be made into dummy variables
+
+sizes <- cta %>%
+  group_by(pair, schoolidn) %>%
+  summarize(n_students = n())
+
+cta_agg <- cta %>%
+  select(y_yirt, oob_preds, risk_score_adj, grdlvl, race, sex, spec_speced, spec_gifted, spec_esl, frl, treatment, xirt, xirt_mis, state, pair, schoolidn) %>%
+  mutate(race_white = ifelse(race == "WHITE NON-HISPANIC", 1, 0)) %>%
+  mutate(race_black = ifelse(race == "BLACK NON-HISPANIC", 1, 0)) %>%
+  mutate(race_indian = ifelse(race == "AMERICAN INDIAN / ALASKAN NATIVE", 1, 0)) %>%
+  mutate(race_asian = ifelse(race == "ASIAN / PACIFIC ISLANDER", 1, 0)) %>%
+  mutate(race_hispanic = ifelse(race == "HISPANIC", 1, 0)) %>%
+  mutate(race_other = ifelse(race == "OTHER RACE / MULTI-RACIAL", 1, 0)) %>% #unknown base level
+  mutate(sex_M = ifelse(sex == "M", 1, 0)) %>%
+  mutate(sex_F = ifelse(sex == "F", 1, 0)) %>% # unknown base level
+  mutate(grdlvl_H = ifelse(grdlvl == 'H', 1, 0)) %>%
+  mutate(spec_speced_yes = ifelse(spec_speced == '1.0', 1, 0)) %>%
+  mutate(spec_speced_no = ifelse(spec_speced == '0.0', 1, 0)) %>%
+  mutate(spec_gifted_yes = ifelse(spec_gifted == '1.0', 1, 0)) %>% # drop other level since it's defined by speced 
+  mutate(spec_esl_yes = ifelse(spec_esl == '1.0', 1, 0)) %>%
+  mutate(spec_esl_no = ifelse(spec_esl == '0.0', 1, 0)) %>%
+  mutate(frl_yes = ifelse(frl == '1.0', 1, 0)) %>%
+  mutate(frl_no = ifelse(frl== '0.0', 1, 0)) %>%
+  mutate(state_al = ifelse(state == 'AL', 1, 0)) %>%
+  mutate(state_ct = ifelse(state == 'CT', 1, 0)) %>%
+  mutate(state_ky = ifelse(state == 'KY', 1, 0)) %>%
+  mutate(state_mi = ifelse(state == 'MI', 1, 0)) %>%
+  mutate(state_nj = ifelse(state == 'NJ', 1, 0)) %>%
+  select(-race, -sex, -grdlvl, -spec_speced, -spec_esl, -spec_gifted, -frl, -state) %>%
+  group_by(pair, schoolidn) %>%
+  summarize_all(mean) %>%
+  left_join(sizes, by = c("pair", "schoolidn")) %>%
+  ungroup()
+```
+
+
+```{r}
+Z = as.matrix(select(cta_agg, -treatment, -y_yirt, -risk_score_adj, -pair, -n_students, -schoolidn))
+
+library(dRCT)
+
+ploop_out = p_loop(Y=cta_agg$y_yirt, Tr=cta_agg$treatment,  Z = Z, P = cta_agg$pair, n =cta_agg$n_students, pred = p_rf_interp, weighted_imp = T)
+
+Z2 = as.matrix(select(cta_agg, -treatment, -y_yirt, -pair, -n_students, -schoolidn))
+
+ploop_out2 = p_loop(Y=cta_agg$y_yirt, Tr=cta_agg$treatment,  Z = Z2, P = cta_agg$pair, n =cta_agg$n_students, pred = p_rf_interp, weighted_imp = T)
+
+ploop_out
+ploop_out2
+```
+
+
+
+
+```{r}
+# Check ranking version (Table 15)
+cta_mod <- read.csv("cta_with_schoolid_mod.csv")
+
+cta_model5 <- lmerTest::lmer(y_yirt ~ risk_score_adj_mod + oob_preds + grdlvl + race + sex + spec_speced + spec_gifted + spec_esl + frl + treatment + xirt + xirt_mis + (1|state/schoolidn), data = cta_mod, REML = FALSE)
+
+cta_model6 <- lmerTest::lmer(y_yirt ~  oob_preds + grdlvl + race + sex + spec_speced + spec_gifted + spec_esl + frl + treatment + xirt + xirt_mis + (1|state/schoolidn), data = cta_mod, REML = FALSE)
+
+coef_matrix5 <- coef(summary(cta_model5))
+round(coef_matrix5[, c("Estimate", "Std. Error", "Pr(>|t|)") ], 3)
+
+
+coef_matrix6 <- coef(summary(cta_model6))
+round(coef_matrix6[, c("Estimate", "Std. Error", "Pr(>|t|)") ], 3)
+```
+

@@ -2,6 +2,7 @@
 # it's based on cta_student_level_final.csv, which is created in the R script create_student_level.R saved locally and rerun on 1/26 so it's up to date
 # you can rerun the preprocessing steps to create that file or if already exists, skip that and run the chatGPT part 
 # it pairs students and asks chatGPT to predict which student will score higher 
+# this version runs all pairs - i.e. (i,j) and (j,i) are both run 
 
 
 import argparse
@@ -54,7 +55,6 @@ def get_oob_preds(df):
 )
 
     model = RandomForestRegressor(
-        n_estimators=200,
         oob_score = True,
         bootstrap = True,
         random_state=2772,
@@ -140,7 +140,8 @@ def preprocess(args):
     df2['idx'] = df2.index
     pairs = pd.merge(df1, df2, on='pair_group', suffixes=('.x', '.y'))
 
-    pairs = pairs[pairs['idx.x'] < pairs['idx.y']]
+    #pairs = pairs[pairs['idx.x'] < pairs['idx.y']]
+    pairs = pairs[pairs['idx.x'] != pairs['idx.y']]
     pairs = pairs.drop(columns=['idx.x', 'idx.y']).reset_index(drop = True)
     print("Done with pairing")
 
@@ -161,7 +162,7 @@ def preprocess(args):
     
     pairs['question'] += " Please respond either 'Student 1' or 'Student 2' with no additional text."
 
-    pairs.to_csv("cta_pairs_preprocessed.csv", index = False)
+    pairs.to_csv("cta_pairs_preprocessed_allpairs.csv", index = False)
 
 
 def run_pipeline(args):
@@ -174,10 +175,10 @@ def run_pipeline(args):
     client = initialize_openai_client(args.api_key)
 
     if args.run_preprocess == "False":
-        pairs = pd.read_csv("cta_pairs_preprocessed.csv")
+        pairs = pd.read_csv("cta_pairs_preprocessed_allpairs.csv")
     else: 
         preprocess(args)
-        pairs = pd.read_csv("cta_pairs_preprocessed.csv")
+        pairs = pd.read_csv("cta_pairs_preprocessed_allpairs.csv")
         
     for i in range(0, len(pairs)):
     #for i in range(0, 5): 
@@ -201,9 +202,9 @@ def run_pipeline(args):
 
         if i % 200 == 0:
             print(f"Done with index {i}")
-            pairs.to_csv("cta_results/pair_results.csv", index = False)
+            pairs.to_csv("cta_results/pair_results_allpairs.csv", index = False)
     
-    pairs.to_csv("cta_results/pair_results.csv", index = False)
+    pairs.to_csv("cta_results/pair_results_allpairs.csv", index = False)
 
 
 if __name__ == "__main__":
