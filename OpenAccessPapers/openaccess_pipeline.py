@@ -30,6 +30,8 @@ def run_pipeline(args):
     input_filename = f"open_access_journal_data/{args.journal}.csv"
     papers = pd.read_csv(input_filename)
 
+    papers['id'] = range(1, len(papers) + 1)
+
     df1 = papers.copy()
     df2 = papers.copy()
     df1 = df1.reset_index(drop=True)
@@ -62,6 +64,8 @@ def run_pipeline(args):
         journal = "The Federation of American Societies for Experimental Biology Journal"
     elif args.journal == "neuro":
         journal = "Journal of Neurophysiology"
+    elif args.journal == "science":
+        journal = "Science"
 
     
     if args.question_type == "basic":
@@ -78,7 +82,7 @@ def run_pipeline(args):
         pairs['question'] += " Paper 2 was published in " + pairs['Year.2'].astype(str) + " and was titled '" + pairs['Article Title.2'] + "'. Paper 2's abstract is: '" + pairs['abstract.2'] + "'. "
         pairs['question'] += " I would like you to decide which paper best exhibits each one of these 11 qualities. The qualities are: topic novelty, topic popularity, title catchiness, generalizability, writing quality, impact of results, subfield popularity, technicality, meaningful contributions, journal fit for Science, and applicability. "
         pairs['question'] += " For each quality, please respond 'Paper 1' or 'Paper 2' depending on which one you think best exhibits the quality. Your answer should consist of 11 responses in order, each separated by commas."
-        #pairs['question'] += " For example, if you think Paper 1 had a more novel topic, Paper 1's topic was considered more popular at the time, Paper 1 had a more catchy title,Paper 2 is more generalizable to broader audiences, Paper 1 had better writing quality, Paper 1's results will have a larger impact, Paper 1's subfield is more popular, but Paper 2 had more meaningful contributions, Paper 2 was a better fit for Science, and Paper 2's results were more applicable, then your response shold be 'Paper 1, Paper 1, Paper 1, Paper 2, Paper 1, Paper 1, Paper 1, Paper 2, Paper 2, Paper 2' "
+        
 
         if args.explanations == "False":
             pairs['question'] += " You should not include any additional text beyond the 11 responses in order."
@@ -98,7 +102,7 @@ def run_pipeline(args):
                 pairs[f'question_{quality}'] += " Please respond either 'Paper 1' or 'Paper 2' followed by a short one sentence explanation of your reasoning."
         
     for i in range(0, len(pairs)):
-    #for i in range(0, 1): 
+    #for i in range(0, 5): 
 
         if (args.question_type == "basic") or (args.question_type == "qualities"):
             question = pairs.iloc[i]['question']
