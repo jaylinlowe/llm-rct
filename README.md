@@ -3,7 +3,7 @@ This repository includes supplemental code for "Leveraging Large Language Models
 
 
 ### Case Study 1: Open Access Papers
-Includes processing data for the third case study. Data is private and cannot be included. 
+Includes processing data for the case study on open access papers. Data is private and cannot be included. 
 
 * `open_access_preprocess.ipynb` - Pulls abstracts and preprocesses raw data. Creates journal-specific CSV files with RCT covariates, outcome, and abstract. 
 * `openaccess_pipeline.py` - Main file for obtaining LLM predictions. Requires corresponding journal data file.  
