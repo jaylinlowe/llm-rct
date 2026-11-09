@@ -29,3 +29,5 @@ Includes processing data for the Cognitive Tutor Algebra (CTA) example. Data is 
 * `cta_analysis.ipynb` - Analysis file of CTA results, based on output files generated in cta_pipeline.py. Requires `cta_results/pair_results_allpairs.csv`. 
 * `cta_paper_results.Rmd`- R file of CTA results, based on output files generated in `cta_analysis.ipynb`. 
 
+### ESM (Electronic Supplementary Material)
+This includes 4 Word files with supplementary information for the paper. 
